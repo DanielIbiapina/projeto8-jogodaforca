@@ -20,23 +20,32 @@ const toUpper = function (x) {
 };
 let alfabetao = alfabeto.map(toUpper);
 
-const palavraEscolhida = palavras
-    const palavrasEmbaralhadas = palavraEscolhida.sort(comparador);
-    const underline = ['']
-    let i = 0
-    while(i<palavrasEmbaralhadas[0].length){
-        underline.push('_ ')
-        i++
-    }
+let i = 0
+let conta = 0
 
-    function comparador() {
-        return Math.random() - 0.5;
-    }
+const palavraEscolhida = palavras
+const palavrasEmbaralhadas = palavraEscolhida.sort(comparador);
+const underline = []
+const imagens = [img0, img1, img2, img3, img4, img5, img6]
+
+while (i < palavrasEmbaralhadas[0].length) {
+    underline.push('_ ')
+    i++
+}
+
+function comparador() {
+    return Math.random() - 0.5;
+}
+
+const palavraArray = palavrasEmbaralhadas[0].split('')
+
 function App() {
     const [modoletra, setModoLetra] = useState(true);
-    const [visivel, setVisivel] = useState(false)
-    
-    
+    const [visivel, setVisivel] = useState(false);
+    const [corletra, setCorletra] = useState([])
+    const [imagemforca, setImagemforca] = useState([imagens[conta]])
+
+
 
 
     console.log(palavrasEmbaralhadas[0])
@@ -48,13 +57,48 @@ function App() {
         setVisivel(true)
     }
 
-    
+    function verificar(letra) {
+        
+        console.log(letra)
+        const letrinha = letra.toLowerCase()
+        console.log(letrinha)
+        const novoArray = [...corletra, letra]
+       
+        console.log(imagemforca)
+       
+        
+        let cont = 0;
+        let k = 0;
+        while (cont < palavraArray.length) {
+            if (letrinha === palavraArray[cont]){
+                if(k==0){alert('acertou')}
+                setCorletra(novoArray)
+                k++
+                underline[cont] = letrinha
+                console.log(underline)
+            }
+            if (letrinha !== palavraArray[cont] && cont == (palavraArray.length - 1) && k<1){
+                alert('errou')
+                conta++
+                const novaImagem = [imagens[conta]]
+                setImagemforca(novaImagem)
+                console.log(conta)
+
+            }
+            cont++
+        }
+
+
+        
+    }
+
+
 
     return (
         <div className='containerzao'>
             <div className='container'>
                 <div className="imagem">
-                    <img src={img0} />
+                    <img src={imagemforca[0]} />
                 </div>
                 <div className='containerzinho'>
                     <div className="botao" onClick={iniciar}>
@@ -79,8 +123,17 @@ function App() {
             <div >
                 <ul className='teclado'>
                     {
-                        modoletra ? alfabetao.map((item) => <li class="divLetraDesativada">{item}</li>) : alfabetao.map((item) => <li class="divLetraAtivada">{item}</li>)
+                        modoletra ?
+                            alfabetao.map((letra) => <li class="divLetraDesativada" >{letra}</li>) : (
+
+                                alfabetao.map((letra, index) => <li key={index} class={corletra.includes(letra) ?"letraVermelha":"divLetraAtivada"} onClick={() => verificar(letra)}>
+                                    {letra}
+                                </li>)
+                            )
+
+
                     }
+
                 </ul>
             </div>
 
