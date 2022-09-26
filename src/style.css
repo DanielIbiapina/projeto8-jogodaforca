@@ -1,0 +1,91 @@
+.containerzao {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    background-color: blue;
+}
+
+img {
+    width: 450px;
+}
+
+.botao {
+    margin-top: 40px;
+}
+
+button {
+    height: 45px;
+    width: 160px;
+
+    background-color: rgb(67, 176, 58);
+    border-radius: 5px;
+    font-weight: 1000;
+    color: white;
+
+    border: none;
+}
+
+.divLetraDesativada {
+    width: 50px;
+    height: 50px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: lightgray;
+    color: gray;
+
+    margin-right: 8px;
+    margin-bottom: 8px;
+
+    border-radius: 6px;
+
+}
+.divLetraAtivada {
+    width: 50px;
+    height: 50px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: green;
+    color: gray;
+
+    margin-right: 8px;
+    margin-bottom: 8px;
+
+    border-radius: 6px;
+
+}
+
+.teclado {
+    width: 810px;
+
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 70px;
+
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.none{
+    display: none;
+}
+.underlines{
+    font-size: 40px;
+    font-weight: 900;
+}
+.margintop{
+    margin-top: 300px;
+    
+}
