@@ -62,8 +62,8 @@ button {
     justify-content: center;
     align-items: center;
 
-    background-color: green;
-    color: gray;
+    background-color: rgb(45, 137, 211);
+    color: rgb(1, 18, 49);
 
     margin-right: 8px;
     margin-bottom: 8px;
@@ -79,7 +79,7 @@ button {
     justify-content: center;
     align-items: center;
 
-    background-color: red;
+    background-color: lightgray;
     color: gray;
 
     margin-right: 8px;
@@ -105,9 +105,24 @@ button {
 .underlines{
     font-size: 40px;
     font-weight: 900;
-    
+}
+.underlinesGanhou{
+    font-size: 40px;
+    font-weight: 900;
+    color: green;
+}
+.underlinesPerdeu{
+    font-size: 40px;
+    font-weight: 900;
+    color: red;
 }
 .margintop{
     margin-top: 300px;
     
+}
+.rodape{
+    margin-top: 30px;
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: center;
 }

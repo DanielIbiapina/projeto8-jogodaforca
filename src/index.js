@@ -22,6 +22,7 @@ let alfabetao = alfabeto.map(toUpper);
 
 let i = 0
 let conta = 0
+let k = 0;
 
 const palavraEscolhida = palavras
 const palavrasEmbaralhadas = palavraEscolhida.sort(comparador);
@@ -44,6 +45,8 @@ function App() {
     const [visivel, setVisivel] = useState(false);
     const [corletra, setCorletra] = useState([])
     const [imagemforca, setImagemforca] = useState([imagens[conta]])
+    const [ganhou, setGanhou] = useState(false)
+    const [perdeu, setPerdeu] = useState(false)
 
 
 
@@ -55,41 +58,59 @@ function App() {
         alert('iniciando...')
         setModoLetra(false)
         setVisivel(true)
+
+
     }
 
     function verificar(letra) {
-        
+
         console.log(letra)
         const letrinha = letra.toLowerCase()
         console.log(letrinha)
         const novoArray = [...corletra, letra]
-       
+
         console.log(imagemforca)
-       
-        
+
+        let g = 0
         let cont = 0;
-        let k = 0;
+
         while (cont < palavraArray.length) {
-            if (letrinha === palavraArray[cont]){
-                if(k==0){alert('acertou')}
+            if (letrinha === palavraArray[cont]) {
+
                 setCorletra(novoArray)
                 k++
+                g++
                 underline[cont] = letrinha
                 console.log(underline)
+                if (k == underline.length) {
+                    setModoLetra(true)
+                    setCorletra([])
+                    setGanhou(true)
+                    alert('Parabéns')
+                }
+                console.log(k)
+                console.log(underline.length)
             }
-            if (letrinha !== palavraArray[cont] && cont == (palavraArray.length - 1) && k<1){
-                alert('errou')
+            if (letrinha !== palavraArray[cont] && cont == (palavraArray.length - 1) && g < 1) {
+
+                setCorletra(novoArray)
                 conta++
                 const novaImagem = [imagens[conta]]
                 setImagemforca(novaImagem)
                 console.log(conta)
+                
+                if (conta == 6) {
+                    setPerdeu(true)
+                    alert('perdeu')
+                    
+                }
 
             }
             cont++
         }
 
 
-        
+
     }
 
 
@@ -106,12 +127,21 @@ function App() {
                             Escolher a palavra
                         </button>
                     </div>
-                    {visivel ? (
-                        <ul className='underlines margintop'>
+                    {visivel ? (ganhou ? (<ul className='underlinesGanhou margintop'>
+
+                        {underline}
+
+                    </ul>)
+                        : (perdeu ? (<ul className='underlinesPerdeu margintop'>
+
+                            {palavrasEmbaralhadas[0]}
+
+                        </ul>) : (<ul className='underlines margintop'>
 
                             {underline}
 
-                        </ul>) : (
+                        </ul>))
+                    ) : (
                         <div className='underlines margintop none'>
 
                         </div>
@@ -126,7 +156,7 @@ function App() {
                         modoletra ?
                             alfabetao.map((letra) => <li class="divLetraDesativada" >{letra}</li>) : (
 
-                                alfabetao.map((letra, index) => <li key={index} class={corletra.includes(letra) ?"letraVermelha":"divLetraAtivada"} onClick={() => verificar(letra)}>
+                                alfabetao.map((letra, index) => <li key={index} class={corletra.includes(letra) ? "letraVermelha" : "divLetraAtivada"} onClick={() => verificar(letra)}>
                                     {letra}
                                 </li>)
                             )
@@ -135,6 +165,11 @@ function App() {
                     }
 
                 </ul>
+            </div>
+            <div className='rodape'>
+                Já sei a palavra!
+                <input></input>
+                <button>chutar</button>
             </div>
 
         </div>
