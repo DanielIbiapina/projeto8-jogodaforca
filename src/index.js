@@ -1,6 +1,5 @@
-import ReactDOM from 'react-dom';
-import { useState } from 'react';
-
+import ReactDOM from "react-dom";
+import { useState, useEffect } from "react";
 import img0 from "./assets/forca0.png";
 import img1 from "./assets/forca1.png";
 import img2 from "./assets/forca2.png";
@@ -10,172 +9,132 @@ import img5 from "./assets/forca5.png";
 import img6 from "./assets/forca6.png";
 import "./reset.css";
 import "./style.css";
-import "./palavras.js"
-import palavras from './palavras.js';
+import palavras from "./palavras.js";
 
+const alphabet = "abcdefghijklmnopqrstuvwxyz".toUpperCase().split("");
+const images = [img0, img1, img2, img3, img4, img5, img6];
 
-let alfabeto = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
-const toUpper = function (x) {
-    return x.toUpperCase();
-};
-let alfabetao = alfabeto.map(toUpper);
-
-let i = 0
-let conta = 0
-let k = 0;
-
-const palavraEscolhida = palavras
-const palavrasEmbaralhadas = palavraEscolhida.sort(comparador);
-const underline = []
-const imagens = [img0, img1, img2, img3, img4, img5, img6]
-
-while (i < palavrasEmbaralhadas[0].length) {
-    underline.push('_ ')
-    i++
+function getRandomWord() {
+  return palavras[Math.floor(Math.random() * palavras.length)];
 }
-
-function comparador() {
-    return Math.random() - 0.5;
-}
-
-const palavraArray = palavrasEmbaralhadas[0].split('')
 
 function App() {
-    const [modoletra, setModoLetra] = useState(true);
-    const [visivel, setVisivel] = useState(false);
-    const [corletra, setCorletra] = useState([])
-    const [imagemforca, setImagemforca] = useState([imagens[conta]])
-    const [ganhou, setGanhou] = useState(false)
-    const [perdeu, setPerdeu] = useState(false)
+  const [chosenWord, setChosenWord] = useState("");
+  const [hiddenWord, setHiddenWord] = useState([]);
+  const [usedLetters, setUsedLetters] = useState([]);
+  const [mistakes, setMistakes] = useState(0);
+  const [gameStatus, setGameStatus] = useState("idle"); // idle, playing, won, lost
+  const [guess, setGuess] = useState("");
 
-
-
-
-    console.log(palavrasEmbaralhadas[0])
-    console.log(palavrasEmbaralhadas[0].length)
-
-    function iniciar() {
-        alert('iniciando...')
-        setModoLetra(false)
-        setVisivel(true)
-
-
+  useEffect(() => {
+    if (gameStatus === "playing" && hiddenWord.join("") === chosenWord) {
+      setGameStatus("won");
     }
+  }, [hiddenWord, chosenWord, gameStatus]);
 
-    function verificar(letra) {
+  function startGame() {
+    const word = getRandomWord();
+    setChosenWord(word);
+    setHiddenWord(Array(word.length).fill("_"));
+    setUsedLetters([]);
+    setMistakes(0);
+    setGameStatus("playing");
+  }
 
-        console.log(letra)
-        const letrinha = letra.toLowerCase()
-        console.log(letrinha)
-        const novoArray = [...corletra, letra]
+  function handleLetterClick(letter) {
+    if (usedLetters.includes(letter) || gameStatus !== "playing") return;
 
-        console.log(imagemforca)
+    setUsedLetters([...usedLetters, letter]);
 
-        let g = 0
-        let cont = 0;
-
-        while (cont < palavraArray.length) {
-            if (letrinha === palavraArray[cont]) {
-
-                setCorletra(novoArray)
-                k++
-                g++
-                underline[cont] = letrinha
-                console.log(underline)
-                if (k == underline.length) {
-                    setModoLetra(true)
-                    setCorletra([])
-                    setGanhou(true)
-                    alert('Parabéns')
-                }
-                console.log(k)
-                console.log(underline.length)
-            }
-            if (letrinha !== palavraArray[cont] && cont == (palavraArray.length - 1) && g < 1) {
-
-                setCorletra(novoArray)
-                conta++
-                const novaImagem = [imagens[conta]]
-                setImagemforca(novaImagem)
-                console.log(conta)
-                
-                if (conta == 6) {
-                    setPerdeu(true)
-                    alert('perdeu')
-                    
-                }
-
-            }
-            cont++
-        }
-
-
-
+    if (chosenWord.includes(letter.toLowerCase())) {
+      const updatedHiddenWord = hiddenWord.map((char, index) =>
+        chosenWord[index] === letter.toLowerCase() ? letter : char
+      );
+      setHiddenWord(updatedHiddenWord);
+    } else {
+      const newMistakes = mistakes + 1;
+      setMistakes(newMistakes);
+      if (newMistakes === images.length - 1) {
+        setGameStatus("lost");
+      }
     }
+  }
 
+  function handleGuessChange(event) {
+    setGuess(event.target.value);
+  }
 
+  function handleGuessSubmit() {
+    if (guess.toLowerCase() === chosenWord.toLowerCase()) {
+      setHiddenWord(chosenWord.split(""));
+      setGameStatus("won");
+    } else {
+      setMistakes(images.length - 1);
+      setGameStatus("lost");
+    }
+  }
 
-    return (
-        <div className='containerzao'>
-            <div className='container'>
-                <div className="imagem">
-                    <img src={imagemforca[0]} />
-                </div>
-                <div className='containerzinho'>
-                    <div className="botao" onClick={iniciar}>
-                        <button>
-                            Escolher a palavra
-                        </button>
-                    </div>
-                    {visivel ? (ganhou ? (<ul className='underlinesGanhou margintop'>
-
-                        {underline}
-
-                    </ul>)
-                        : (perdeu ? (<ul className='underlinesPerdeu margintop'>
-
-                            {palavrasEmbaralhadas[0]}
-
-                        </ul>) : (<ul className='underlines margintop'>
-
-                            {underline}
-
-                        </ul>))
-                    ) : (
-                        <div className='underlines margintop none'>
-
-                        </div>
-                    )
-                    }
-                </div>
-
-            </div>
-            <div >
-                <ul className='teclado'>
-                    {
-                        modoletra ?
-                            alfabetao.map((letra) => <li class="divLetraDesativada" >{letra}</li>) : (
-
-                                alfabetao.map((letra, index) => <li key={index} class={corletra.includes(letra) ? "letraVermelha" : "divLetraAtivada"} onClick={() => verificar(letra)}>
-                                    {letra}
-                                </li>)
-                            )
-
-
-                    }
-
-                </ul>
-            </div>
-            <div className='rodape'>
-                Já sei a palavra!
-                <input></input>
-                <button>chutar</button>
-            </div>
-
+  return (
+    <div className="game-container">
+      <div className="game">
+        <div className="hangman-image">
+          <img src={images[mistakes]} alt={`Mistake ${mistakes}`} />
         </div>
-    );
+
+        <div className="word">
+          <ul className={`word ${gameStatus === "won" ? "won" : ""}`}>
+            {hiddenWord.map((char, index) => (
+              <li key={index}>{char}</li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="keyboard">
+          {alphabet.map((letter, index) => (
+            <button
+              key={index}
+              className={usedLetters.includes(letter) ? "disabled" : "active"}
+              onClick={() => handleLetterClick(letter)}
+              disabled={
+                usedLetters.includes(letter) || gameStatus !== "playing"
+              }
+            >
+              {letter}
+            </button>
+          ))}
+        </div>
+
+        <div className="guess-container">
+          <p>Já sabe a palavra? Tente adivinhar:</p>
+          <input
+            type="text"
+            value={guess}
+            onChange={handleGuessChange}
+            disabled={gameStatus !== "playing"}
+          />
+          <button
+            onClick={handleGuessSubmit}
+            disabled={gameStatus !== "playing"}
+          >
+            Chutar
+          </button>
+        </div>
+
+        {gameStatus === "won" && (
+          <div className="message">Parabéns, você venceu!</div>
+        )}
+        {gameStatus === "lost" && (
+          <div className="message">
+            Você perdeu! A palavra era: {chosenWord}
+          </div>
+        )}
+
+        <button onClick={startGame} className="restart-button">
+          {gameStatus === "idle" ? "Começar Jogo" : "Reiniciar Jogo"}
+        </button>
+      </div>
+    </div>
+  );
 }
-
-
 
 ReactDOM.render(<App />, document.querySelector(".root"));
